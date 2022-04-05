@@ -1,0 +1,2 @@
+# mediatek86gestion
+ 
