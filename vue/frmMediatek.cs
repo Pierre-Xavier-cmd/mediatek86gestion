@@ -1278,5 +1278,34 @@ namespace Mediatek86.vue
 
         #endregion
 
+        private void grpLivresRecherche_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label66_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label71_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox12_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label72_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox13_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
