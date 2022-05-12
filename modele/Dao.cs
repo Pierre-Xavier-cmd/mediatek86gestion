@@ -15,6 +15,21 @@ namespace Mediatek86.modele
         private static readonly string database = "mediatek86";
         private static readonly string connectionString = "server="+server+";user id="+userid+";password="+password+";database="+database+";SslMode=none";
 
+
+
+
+
+ //       public static Authentification (string login, string pwd)
+ //       {
+ //           string req = "select * from user ";
+ //          req += "where login=@login and password=SHA2(password, 256)";
+ //          Dictionary<string, object> parameters = new Dictionary<string, object>();
+ //           parameters.Add("@login", login);
+ //          parameters.Add("@password", password);
+ //          BddMySQL
+//        }
+
+
         /// <summary>
         /// Retourne tous les genres à partir de la BDD
         /// </summary>
@@ -78,6 +93,28 @@ namespace Mediatek86.modele
             return lesPublics;
         }
 
+
+        /// <summary>
+        /// Retourne toutes les catégories de etat à partir de la BDD
+        /// </summary>
+        /// <returns>Collection d'objets Etat</returns>
+        public static List<Categorie> GetAllEtat()
+        {
+            List<Categorie> lesEtats = new List<Categorie>();
+            string req = "Select * from statut order by libelle";
+
+            BddMySql curs = BddMySql.GetInstance(connectionString);
+            curs.ReqSelect(req, null);
+
+            while (curs.Read())
+            {
+                Public Etat = new Public((string)curs.Field("id"), (string)curs.Field("libelle"));
+                lesEtats.Add(Etat);
+            }
+            curs.Close();
+            return lesEtats;
+        }
+
         /// <summary>
         /// Retourne toutes les livres à partir de la BDD
         /// </summary>
@@ -117,6 +154,46 @@ namespace Mediatek86.modele
             curs.Close();
 
             return lesLivres;
+        }
+
+        /// <summary>
+        /// Retourne toutes les commandes à partir de la BDD
+        /// </summary>
+        /// <returns>Liste d'objets Commande</returns>
+        public static List<CommandeDocument> GetAllCommandes() 
+        {
+            List<CommandeDocument> lesCommandes = new List<CommandeDocument>();
+            string req = "Select commandedocument.nbExemplaire, statut.id as idstatut,";
+            req += " statut.libelle as statut, commande.id, commande.dateCommande,";
+            req += " commande.montant, commandedocument.idLivreDvd";
+            req += " from commandedocument";
+            req += " join commande on commandedocument.id = commande.id";
+            req += " join statut on commandedocument.idStade = statut.id";
+
+
+
+
+            BddMySql curs = BddMySql.GetInstance(connectionString);
+            curs.ReqSelect(req, null);
+
+
+            while (curs.Read()) 
+            {
+                string id = (string)curs.Field("id");
+                int nbExemplaire = (int)curs.Field("nbExemplaire");
+                DateTime dateCommande = (DateTime)curs.Field("dateCommande");
+                double montant = (double)curs.Field("montant");
+                string idStatut = (string)curs.Field("idStatut");
+                string statut = (string)curs.Field("statut");
+                string idLivreDvd = (string)curs.Field("idLivreDvd");
+//               string titre = (string)curs.Field("titre");
+                CommandeDocument commande = new CommandeDocument(nbExemplaire, id, dateCommande.ToString(), montant.ToString(), idStatut, statut, idLivreDvd, "");
+                lesCommandes.Add(commande);
+
+            }
+            curs.Close();
+            Console.WriteLine(lesCommandes.ToString());
+            return lesCommandes;
         }
 
         /// <summary>

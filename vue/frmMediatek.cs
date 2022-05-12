@@ -17,13 +17,16 @@ namespace Mediatek86.vue
         const string ETATNEUF = "00001";
 
         private readonly BindingSource bdgLivresListe = new BindingSource();
+        private readonly BindingSource bdgCommandesListe = new BindingSource();
         private readonly BindingSource bdgDvdListe = new BindingSource();
         private readonly BindingSource bdgGenres = new BindingSource();
         private readonly BindingSource bdgPublics = new BindingSource();
         private readonly BindingSource bdgRayons = new BindingSource();
         private readonly BindingSource bdgRevuesListe = new BindingSource();
         private readonly BindingSource bdgExemplairesListe = new BindingSource();
+        private readonly BindingSource bdgStatut = new BindingSource();
         private List<Livre> lesLivres = new List<Livre>();
+        private List<CommandeDocument> lesCommandes = new List<CommandeDocument>();
         private List<Dvd> lesDvd = new List<Dvd>();
         private List<Revue> lesRevues = new List<Revue>();
         private List<Exemplaire> lesExemplaires = new List<Exemplaire>();
@@ -86,14 +89,14 @@ namespace Mediatek86.vue
         {
             bdgRevuesListe.DataSource = revues;
             dgvRevuesListe.DataSource = bdgRevuesListe;
-            dgvRevuesListe.Columns["empruntable"].Visible = false;
-            dgvRevuesListe.Columns["idRayon"].Visible = false;
-            dgvRevuesListe.Columns["idGenre"].Visible = false;
-            dgvRevuesListe.Columns["idPublic"].Visible = false;
-            dgvRevuesListe.Columns["image"].Visible = false;
-            dgvRevuesListe.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            dgvRevuesListe.Columns["id"].DisplayIndex = 0;
-            dgvRevuesListe.Columns["titre"].DisplayIndex = 1;
+//            dgvRevuesListe.Columns["empruntable"].Visible = false;
+//            dgvRevuesListe.Columns["idRayon"].Visible = false;
+//            dgvRevuesListe.Columns["idGenre"].Visible = false;
+//            dgvRevuesListe.Columns["idPublic"].Visible = false;
+//            dgvRevuesListe.Columns["image"].Visible = false;
+//            dgvRevuesListe.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+//            dgvRevuesListe.Columns["id"].DisplayIndex = 0;
+//            dgvRevuesListe.Columns["titre"].DisplayIndex = 1;
         }
 
         /// <summary>
@@ -391,6 +394,7 @@ namespace Mediatek86.vue
         /// <param name="e"></param>
         private void TabLivres_Enter(object sender, EventArgs e)
         {
+            Console.WriteLine("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
             lesLivres = controle.GetAllLivres();
             RemplirComboCategorie(controle.GetAllGenres(), bdgGenres, cbxLivresGenres);
             RemplirComboCategorie(controle.GetAllPublics(), bdgPublics, cbxLivresPublics);
@@ -403,6 +407,7 @@ namespace Mediatek86.vue
         /// </summary>
         private void RemplirLivresListe(List<Livre> livres)
         {
+
             bdgLivresListe.DataSource = livres;
             dgvLivresListe.DataSource = bdgLivresListe;
             dgvLivresListe.Columns["isbn"].Visible = false;
@@ -723,14 +728,14 @@ namespace Mediatek86.vue
         {
             bdgDvdListe.DataSource = Dvds;
             dgvDvdListe.DataSource = bdgDvdListe;
-            dgvDvdListe.Columns["idRayon"].Visible = false;
-            dgvDvdListe.Columns["idGenre"].Visible = false;
-            dgvDvdListe.Columns["idPublic"].Visible = false;
-            dgvDvdListe.Columns["image"].Visible = false;
-            dgvDvdListe.Columns["synopsis"].Visible = false;
-            dgvDvdListe.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            dgvDvdListe.Columns["id"].DisplayIndex = 0;
-            dgvDvdListe.Columns["titre"].DisplayIndex = 1;
+//            dgvDvdListe.Columns["idRayon"].Visible = false;
+//            dgvDvdListe.Columns["idGenre"].Visible = false;
+//            dgvDvdListe.Columns["idPublic"].Visible = false;
+//            dgvDvdListe.Columns["image"].Visible = false;
+//            dgvDvdListe.Columns["synopsis"].Visible = false;
+//            dgvDvdListe.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+//            dgvDvdListe.Columns["id"].DisplayIndex = 0;
+//            dgvDvdListe.Columns["titre"].DisplayIndex = 1;
         }
 
         /// <summary>
@@ -1307,5 +1312,298 @@ namespace Mediatek86.vue
         {
 
         }
+
+        private void dgvRevuesListe_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        #region Commandes livre/DVD
+
+        //-----------------------------------------------------------
+        // ONGLET " Commandes livre/DVD "
+        //-----------------------------------------------------------
+
+        /// <summary>
+        /// Ouverture de l'onglet Commandes livre/DVD : 
+        /// appel des méthodes pour remplir le datagrid des commandes des livres, des DVD et des combos (genre, rayon, public)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TabCommandes_Enter(object sender, EventArgs e)
+        {
+            Console.WriteLine("***********************************************************");
+            lesCommandes = controle.GetAllCommandes();
+            RemplirComboCategorie(controle.GetAllEtat(), bdgStatut, cbxCommandesStade);
+            RemplirCommandesListeComplete();
+        }
+
+        /// <summary>
+        /// Remplit le dategrid avec la liste reçue en paramètre
+        /// </summary>
+        private void RemplirCommandesListe(List<CommandeDocument> commandes)
+        {   Console.WriteLine("***********************************************************");
+            Console.WriteLine(commandes.Count);
+            bdgCommandesListe.DataSource = commandes;
+            dgvCommandesListe.DataSource = bdgCommandesListe;
+            dgvCommandesListe.Columns["nbExemplaire"].Visible = true;
+            dgvCommandesListe.Columns["dateCommande"].Visible = true;
+            dgvCommandesListe.Columns["montant"].Visible = false;
+            dgvCommandesListe.Columns["idStatut"].Visible = false;
+            dgvCommandesListe.Columns["statut"].Visible = false;
+            dgvCommandesListe.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dgvCommandesListe.Columns["idLivreDvd"].DisplayIndex = 0;
+            dgvCommandesListe.Columns["titre"].DisplayIndex = 1;
+        }
+
+        /// <summary>
+        /// Recherche et affichage de la commande dont on a saisi le numéro.
+        /// Si non trouvé, affichage d'un MessageBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnCommandesNumRecherche_Click(object sender, EventArgs e)
+        {
+            if (!txbCommandesNumRecherche.Text.Equals(""))
+            {
+                txbCommandesTitreRecherche.Text = "";
+                cbxCommandesStade.SelectedIndex = -1;
+                CommandeDocument commande = lesCommandes.Find(x => x.Id.Equals(txbCommandesNumRecherche.Text));
+                if (commande != null)
+                {
+                    List<CommandeDocument> commandes = new List<CommandeDocument>();
+                    commandes.Add(commande);
+                    Console.WriteLine("***********************************************************");
+                    RemplirCommandesListe(commandes);
+                }
+                else
+                {
+                    MessageBox.Show("numéro introuvable");
+                    RemplirCommandesListeComplete();
+                }
+            }
+            else
+            {
+                RemplirCommandesListeComplete();
+            }
+        }
+
+        /// <summary>
+        /// Recherche et affichage des commandes dont le titre matche avec la saisie.
+        /// Cette procédure est exécutée à chaque ajout ou suppression de caractère
+        /// dans le textBox de saisie.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TxbCommandesTitreRecherche_TextChanged(object sender, EventArgs e)
+        {
+            if (!txbCommandesTitreRecherche.Text.Equals(""))
+            {
+
+                cbxCommandesStade.SelectedIndex = -1;
+                txbCommandesNumRecherche.Text = "";
+                List<CommandeDocument> lesCommandesParTitre;
+                lesCommandesParTitre = lesCommandes.FindAll(x => x.Titre.ToLower().Contains(txbCommandesTitreRecherche.Text.ToLower()));
+                RemplirCommandesListe(lesCommandesParTitre);
+            }
+            else
+            {
+                // si la zone de saisie est vide et aucun élément combo sélectionné, réaffichage de la liste complète
+                if (cbxCommandesStade.SelectedIndex < 0 
+                    && txbCommandesNumRecherche.Text.Equals(""))
+                {
+                    RemplirCommandesListeComplete();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Affichage des informations du livre sélectionné
+        /// </summary>
+        /// <param name="commande"></param>
+        private void AfficheCommandesInfos(CommandeDocument commande)
+        {
+            txbCommandesNbExpl.Text = commande.NbExemplaire.ToString();
+            txbCommandesEtat.Text = commande.Statut;
+            txbCommandesNum.Text = commande.Id;
+            txbCommandesDate.Text = commande.DateCommande;
+            txbCommandesNumero.Text = commande.IdLivreDvd;
+            txbCommandesMontant.Text = commande.Montant;
+            txbCommandesTitre.Text = commande.Titre;
+        }
+        /// <summary>
+        /// Vide les zones d'affichage des informations du livre
+        /// </summary>
+        private void VideCommandesInfos()
+        {
+            txbCommandesNbExpl.Text = "";
+            txbCommandesEtat.Text = "";
+            txbCommandesNum.Text = "";
+            txbCommandesDate.Text = "";
+            txbCommandesNumero.Text = "";
+            txbCommandesMontant.Text = "";
+            txbCommandesTitre.Text = "";
+        }
+
+
+
+
+        /// <summary>
+        /// Filtre sur le stade
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CbxCommandesStade_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbxCommandesStade.SelectedIndex >= 0)
+            {
+                txbCommandesTitreRecherche.Text = "";
+                txbCommandesNumRecherche.Text = "";
+                Statut statut = (Statut)cbxCommandesStade.SelectedItem;
+                List<CommandeDocument> commandes = lesCommandes.FindAll(x => x.Statut.Equals(statut.Libelle));
+                RemplirCommandesListe(commandes);
+            }
+        }
+
+        /// <summary>
+        /// Sur la sélection d'une ligne ou cellule dans le grid
+        /// affichage des informations de la commande
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DgvCommandesListe_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvCommandesListe.CurrentCell != null)
+            {
+                try
+                {
+                    CommandeDocument commande = (CommandeDocument)bdgCommandesListe.List[bdgCommandesListe.Position];
+                    AfficheCommandesInfos(commande);
+                }
+                catch
+                {
+                    VideCommandesZones();
+                }
+            }
+            else
+            {
+                VideCommandesInfos();
+            }
+        }
+
+        /// <summary>
+        /// Sur la sélection d'une ligne ou cellule dans le grid
+        /// affichage des informations du livre
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DgvCommande_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvCommandesListe.CurrentCell != null)
+            {
+                try
+                {
+                    CommandeDocument commande = (CommandeDocument)bdgCommandesListe.List[bdgCommandesListe.Position];
+                    AfficheCommandesInfos(commande);
+                }
+                catch
+                {
+                    VideCommandesZones();
+                }
+            }
+            else
+            {
+                VideCommandesInfos();
+            }
+        }
+
+        /// <summary>
+        /// Sur le clic du bouton d'annulation, affichage de la liste complète des livres
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnCommandesAnnulPublics_Click(object sender, EventArgs e)
+        {
+            RemplirCommandesListeComplete();
+        }
+
+        /// <summary>
+        /// Sur le clic du bouton d'annulation, affichage de la liste complète des livres
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnCommandesAnnulRayons_Click(object sender, EventArgs e)
+        {
+            RemplirCommandesListeComplete();
+        }
+
+        /// <summary>
+        /// Sur le clic du bouton d'annulation, affichage de la liste complète des livres
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnCommandesAnnulGenres_Click(object sender, EventArgs e)
+        {
+            RemplirCommandesListeComplete();
+        }
+
+        /// <summary>
+        /// Affichage de la liste complète des livres
+        /// et annulation de toutes les recherches et filtres
+        /// </summary>
+        private void RemplirCommandesListeComplete()
+        {
+            RemplirCommandesListe(lesCommandes);
+            VideCommandesZones();
+        }
+
+        /// <summary>
+        /// vide les zones de recherche et de filtre
+        /// </summary>
+        private void VideCommandesZones()
+        {
+            cbxCommandesStade.SelectedIndex = -1;
+            txbCommandesNumRecherche.Text = "";
+            txbCommandesTitreRecherche.Text = "";
+        }
+
+        /// <summary>
+        /// Tri sur les colonnes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DgvCommandesListe_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            VideCommandesZones();
+            string titreColonne = dgvCommandesListe.Columns[e.ColumnIndex].HeaderText;
+            List<CommandeDocument> sortedList = new List<CommandeDocument>();
+            switch (titreColonne)
+            {
+                case "Id":
+                    sortedList = lesCommandes.OrderBy(o => o.Id).ToList();
+                    break;
+                case "Titre":
+                    sortedList = lesCommandes.OrderBy(o => o.Titre).ToList();
+                    break;
+//               case "Collection":
+//                  sortedList = lesCommandes.OrderBy(o => o.Collection).ToList();
+//                  break;
+//               case "Genre":
+//                    sortedList = lesCommandes.OrderBy(o => o.Genre).ToList();
+//                   break;
+
+              
+            }
+            RemplirCommandesListe(sortedList);
+        }
+
+
+
+
+        #endregion
+
+  
     }
+
+
 }

@@ -4,6 +4,7 @@ using Mediatek86.metier;
 using Mediatek86.vue;
 
 
+
 namespace Mediatek86.controleur
 {
     internal class Controle
@@ -14,18 +15,22 @@ namespace Mediatek86.controleur
         private readonly List<Categorie> lesRayons;
         private readonly List<Categorie> lesPublics;
         private readonly List<Categorie> lesGenres;
+        private readonly List<CommandeDocument> lesCommandes;
+        private readonly List<Categorie> lesEtats;
 
         /// <summary>
         /// Ouverture de la fenêtre
         /// </summary>
         public Controle()
         {
+            lesCommandes = Dao.GetAllCommandes();
             lesLivres = Dao.GetAllLivres();
             lesDvd = Dao.GetAllDvd();
             lesRevues = Dao.GetAllRevues();
             lesGenres = Dao.GetAllGenres();
             lesRayons = Dao.GetAllRayons();
             lesPublics = Dao.GetAllPublics();
+            lesEtats = Dao.GetAllEtat();
             FrmMediatek frmMediatek = new FrmMediatek(this);
             frmMediatek.ShowDialog();
         }
@@ -46,6 +51,15 @@ namespace Mediatek86.controleur
         public List<Livre> GetAllLivres()
         {
             return lesLivres;
+        }
+
+        /// <summary>
+        /// getter sur la liste des commandes
+        /// </summary>
+        /// <returns>Collection d'objets Commande</returns>
+        public List<CommandeDocument> GetAllCommandes()
+        {
+            return lesCommandes;
         }
 
         /// <summary>
@@ -82,6 +96,15 @@ namespace Mediatek86.controleur
         public List<Categorie> GetAllPublics()
         {
             return lesPublics;
+        }
+
+        /// <summary>
+        /// getter sur les etats
+        /// </summary>
+        /// <returns>Collection d'objets Etat</returns>
+        public List<Categorie> GetAllEtat()
+        {
+            return lesEtats;
         }
 
         /// <summary>
